@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         // CREATE
-        String sql = SqlCreate();
+        String sql = sqlCreate();
         // TODO フラグで成功/失敗判定を入れるべき?
         db.execSQL(sql);
     }
@@ -33,7 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * CREATE文を作成して返す
      * @return
      */
-    private String SqlCreate() {
+    private String sqlCreate() {
 
         StringBuffer sb = new StringBuffer();
 
