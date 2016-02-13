@@ -1,5 +1,6 @@
 package com.myproject.vinsky.backend;
 
+import android.util.Log;
 import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -7,13 +8,10 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.io.StringReader;
 
-/**
- * Created by paris_texas on 2016/02/13.
- */
 public class XmlParser {
 
     /**
-     * RSS1.0に準拠するxmlファイルを解析し、
+     * RSS1.0に準拠するXMLファイルを解析する
      * @param xml
      */
     public void parseRss1(String xml) {
@@ -39,9 +37,24 @@ public class XmlParser {
                 }
             }
         } catch (XmlPullParserException e) {
+            Log.d("parserRss1", "Error");
 
         } catch (IOException e){
-
+            Log.d("parserRss1", "Error");
         }
+    }
+
+    /**
+     * RSS2.0に準拠するXMLファイルを解析する
+     * @param xml
+     */
+    public void parseRss2(String xml) {
+    }
+
+    /**
+     * ATOMに準拠するXMLファイルを解析する
+     * @param xml
+     */
+    public void parseAtom(String xml) {
     }
 }
