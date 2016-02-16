@@ -14,7 +14,7 @@ import java.util.List;
 public class XmlParser {
 
     /** 解析状態を保持するための変数 */
-    public static int eventType;
+    private static int eventType;
 
     /**
      * RSS1.0に準拠するXMLファイルを解析する.
