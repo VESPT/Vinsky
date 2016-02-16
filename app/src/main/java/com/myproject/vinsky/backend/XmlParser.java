@@ -13,6 +13,9 @@ import java.util.List;
 
 public class XmlParser {
 
+    /** 解析状態を保持するための変数 */
+    public static int eventType;
+
     /**
      * RSS1.0に準拠するXMLファイルを解析する.
      * 解析結果をBean変数内に整理してBeanごと返す.
@@ -30,25 +33,24 @@ public class XmlParser {
         XmlPullParser xmlPullParser = Xml.newPullParser();
         xmlPullParser.setInput(new StringReader(xml));
 
-        int eventType;
         while ((eventType = xmlPullParser.next()) != XmlPullParser.END_DOCUMENT) {
 
             if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.CHANNEL.getName())) {
                 // channelタグを処理
-                channel = parseChannelTag(xmlPullParser, eventType);
+                channel = parseChannelTag(xmlPullParser);
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.ITEM.getName())) {
                 // itemタグを処理
-                articles.add(parseItemTag(xmlPullParser, eventType));
+                articles.add(parseItemTag(xmlPullParser));
 
             } else {
             	// その他タグは無視
             	continue;
             }
         }
-    	
+
     	xmlParserBean.setChannels(channel);
         xmlParserBean.setArticles(articles);
 
@@ -58,12 +60,11 @@ public class XmlParser {
     /**
      * CHANNELタグ解析用メソッド.
      * @param xmlPullParser XmlPullParserオブジェクト
-     * @param eventType 解析状態を保持する数値
      * @return channel Channelタグ内の情報をまとめたハッシュ
      * @throws XmlPullParserException 例外
      * @throws IOException 例外
      */
-    private HashMap<String, String> parseChannelTag(XmlPullParser xmlPullParser, int eventType)
+    private HashMap<String, String> parseChannelTag(XmlPullParser xmlPullParser)
             throws XmlPullParserException, IOException {
 
         HashMap<String, String> channel = new HashMap<String, String>();
@@ -106,12 +107,11 @@ public class XmlParser {
     /**
      * ITEMタグ解析用メソッド.
      * @param xmlPullParser XmlPullParserオブジェクト
-     * @param eventType 解析状態を保持する数値
      * @return article 記事情報をまとめたハッシュ
      * @throws XmlPullParserException 例外
      * @throws IOException 例外
      */
-    private HashMap<String, String> parseItemTag(XmlPullParser xmlPullParser, int eventType)
+    private HashMap<String, String> parseItemTag(XmlPullParser xmlPullParser)
             throws XmlPullParserException, IOException {
 
         HashMap<String, String> article = new HashMap<String, String>();
