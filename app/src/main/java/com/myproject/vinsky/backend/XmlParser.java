@@ -79,7 +79,7 @@ public class XmlParser {
             if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.TITLE.getName())) {
                 // title
-                channel.put(XmlParserEnum.ITEM.getName(),
+                channel.put(XmlParserEnum.TITLE.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&

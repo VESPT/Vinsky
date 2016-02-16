@@ -10,7 +10,7 @@ public class XmlParserBean {
     HashMap<String, String> channels;
 
     /** itemタグ以下格納用 */
-    List<HashMap<String, String>> articles = new ArrayList<HashMap<String, String>>();
+    List<HashMap<String, String>> articles;
 
     public HashMap<String, String> getChannels() {
         return channels;
