@@ -17,8 +17,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * ローカルにDBファイルがない場合のみ実行されるメソッド
-     * @param db
+     * ローカルにDBファイルがない場合のみ実行されるメソッド.
+     * @param db データベースオブジェクト
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -30,29 +30,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * CREATE文を作成して返す
-     * @return
+     * CREATE文を作成して返す.
+     * @return SQL / CREATE文
      */
     private String sqlCreate() {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         // 記事内容保存テーブル作成
         sb.append("CREATE TABLE t01_article_table ( ");
-        sb.append("  id INTEGER PRIMARY KEY AUTOINCREMENT ");
-        sb.append("  ,title TEXT ");
+        sb.append("  id           INTEGER PRIMARY KEY AUTOINCREMENT ");
+        sb.append("  ,title       TEXT ");
         sb.append("  ,description TEXT ");
-        sb.append("  ,contents TEXT ");
-        sb.append("  ,watched NTEGER ) ");
+        sb.append("  ,contents    TEXT ");
+        sb.append("  ,watched     INTEGER ) ");
+
+        // お気に入り記事本テーブル作成
+        sb.append("CREATE TABLE t02_like_table ( ");
+        sb.append("  id INTEGER PRIMARY KEY AUTOINCREMENT ) ");
 
         return sb.toString();
     }
 
     /**
      * アップグレードが行われた時に実行されるメソッド
-     * @param db
-     * @param oldVersion
-     * @param newVersion
+     * @param db データベースオブジェクト
+     * @param oldVersion 旧バージョン番号
+     * @param newVersion 新バージョン番号
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
