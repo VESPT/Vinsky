@@ -5,20 +5,23 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
+import android.app.ListActivity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
+import android.widget.ListView;
 
-public class MainActivity extends Activity
+import com.myproject.vinsky.app.UI.Item;
+import com.myproject.vinsky.app.UI.RssListAdapter;
+
+import java.util.ArrayList;
+
+public class MainActivity extends ListActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -29,21 +32,38 @@ public class MainActivity extends Activity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private CharSequence lastTitle;
+
+    // RSS用メンバ変数
+    private ArrayList mItems;
+    private RssListAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // フラグメントの設定
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
+        lastTitle = getTitle();
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        // Itemオブジェクトを保持するためのリストを生成し、アダプタに追加する
+        mItems = new ArrayList();
+        mAdapter = new RssListAdapter(this, mItems);
+
+        // アダプタをリストビューにセットする
+        setListAdapter(mAdapter);
+
+        // サンプル用に空のItemオブジェクトをセットする
+        for (int i = 0; i < 10; i++) {
+            mAdapter.add(new Item());
+        }
     }
 
     @Override
@@ -58,13 +78,13 @@ public class MainActivity extends Activity
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
-                mTitle = getString(R.string.title_section1);
+                lastTitle = getString(R.string.title_section1);
                 break;
             case 2:
-                mTitle = getString(R.string.title_section2);
+                lastTitle = getString(R.string.title_section2);
                 break;
             case 3:
-                mTitle = getString(R.string.title_section3);
+                lastTitle = getString(R.string.title_section3);
                 break;
         }
     }
@@ -73,7 +93,7 @@ public class MainActivity extends Activity
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        actionBar.setTitle(lastTitle);
     }
 
 
