@@ -13,22 +13,27 @@ import java.util.List;
 
 public class XmlParser {
 
+    /** Constructor */
+    XmlParser() {
+    }
+
     /** 解析状態を保持するための変数 */
     private static int eventType;
 
     /**
      * RSS1.0に準拠するXMLファイルを解析する.
      * 解析結果をBean変数内に整理してBeanごと返す.
+     * channel情報はHashMap、記事情報は1記事1HashMapのリストとしてBeanに格納される。
      * @param xml RSS1.0準拠のXMLファイル
      */
     public XmlParserBean parseRss1(String xml) throws XmlPullParserException, IOException {
 
-    	// ブログ情報全体の格納先となるビーン.
-    	XmlParserBean xmlParserBean = new XmlParserBean();
-    	// ブログ情報(channelタグ内情報)を保持するハッシュマップ.
-    	HashMap<String, String> channel = null;
-    	// 記事情報(itemタグ内情報)を保持するリスト.
-    	List<HashMap<String, String>> articles = new ArrayList<HashMap<String, String>>();
+        // ブログ情報全体の格納先となるビーン.
+        XmlParserBean xmlParserBean = new XmlParserBean();
+        // ブログ情報(channelタグ内情報)を保持するハッシュマップ.
+        HashMap<String, String> channel = null;
+        // 記事情報(itemタグ内情報)を保持するリスト.
+        List<HashMap<String, String>> articles = new ArrayList<HashMap<String, String>>();
 
         XmlPullParser xmlPullParser = Xml.newPullParser();
         xmlPullParser.setInput(new StringReader(xml));
@@ -36,6 +41,11 @@ public class XmlParser {
         while ((eventType = xmlPullParser.next()) != XmlPullParser.END_DOCUMENT) {
 
             if (eventType == XmlPullParser.START_TAG &&
+                    xmlPullParser.getName().equals(XmlParserEnum.RDF_RDF.getName())) {
+                // xml1.0は必ずrdf:RDFタグで開始される
+                continue;
+
+            } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.CHANNEL.getName())) {
                 // channelタグを処理
                 channel = parseChannelTag(xmlPullParser);
@@ -46,12 +56,12 @@ public class XmlParser {
                 articles.add(parseItemTag(xmlPullParser));
 
             } else {
-            	// その他タグは無視
-            	continue;
+                // その他タグは無視
+                continue;
             }
         }
 
-    	xmlParserBean.setChannels(channel);
+        xmlParserBean.setChannels(channel);
         xmlParserBean.setArticles(articles);
 
         return xmlParserBean;
@@ -71,6 +81,7 @@ public class XmlParser {
 
         // (1)ブログへのURLを取得.
         // TODO 他に属性がある場合、仕様では順序まで保障されていない可能性あり
+        // TODO aboutは必須属性なので、必ず付与される想定
         channel.put(XmlParserEnum.RDF_ABOUT.getName(), xmlPullParser.getAttributeValue(0));
 
         // (2)ブログの基本情報を取得.
@@ -96,9 +107,15 @@ public class XmlParser {
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
-                    xmlPullParser.getName().equals(XmlParserEnum.ITEM.getName())) {
+                    xmlPullParser.getName().equals(XmlParserEnum.ITEMS.getName())) {
                 // item
-                //TODO itemはメソッドを使いまわせるよう記述する
+                //TODO itemはメソッドを使いまわせるよう記述する?
+                //TODO channelの中にはchannel用のitemsタグがあるので、それに合わせて処理を作る
+
+            } else {
+                // 終了タグまで処理を続行する
+                // TODO 終了タグが記述されていない場合の考慮を入れるかどうか
+                continue;
             }
         }
         return channel;
@@ -122,7 +139,6 @@ public class XmlParser {
                 StringUtils.defaultString(xmlPullParser.getAttributeValue(0)));
 
         // (2)記事情報を取得.
-        // TODO この条件じゃ駄目な気がする
         while ((eventType = xmlPullParser.next()) != XmlPullParser.END_TAG &&
                 xmlPullParser.getName().equals(XmlParserEnum.ITEM.getName())) {
 
@@ -133,16 +149,17 @@ public class XmlParser {
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
+                    xmlPullParser.getName().equals(XmlParserEnum.LINK.getName())) {
+                // link
+                article.put(XmlParserEnum.LINK.getName(),
+                        StringUtils.defaultString(xmlPullParser.getText()));
+
+            } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.DESCRIPTION.getName())) {
                 // description
                 article.put(XmlParserEnum.DESCRIPTION.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
-            } else if (eventType == XmlPullParser.START_TAG &&
-                    xmlPullParser.getName().equals(XmlParserEnum.LINK.getName())) {
-                // link
-                article.put(XmlParserEnum.LINK.getName(),
-                        StringUtils.defaultString(xmlPullParser.getText()));
             } else {
                 // その他タグは無視
                 continue;
