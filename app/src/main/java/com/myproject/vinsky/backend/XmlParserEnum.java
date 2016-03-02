@@ -4,6 +4,8 @@ public enum XmlParserEnum {
 
     /** ?xml */
     XML("?xml"),
+    /** drf:RDF */
+    RDF_RDF("rdf:RDF"),
     /** version */
     VERSION("version"),
     /** encoding */
@@ -11,7 +13,9 @@ public enum XmlParserEnum {
     /** channel */
     CHANNEL("channel"),
     /** rdf:about(サイトのRSSのURL or 記事xのURL) */
-    RDF_ABOUT("df:about"),
+    RDF_ABOUT("rdf:about"),
+    /** rdf:Seq */
+    RDF_SEQ("rdf:Seq"),
     /** rdf:li */
     RDF_LI("rdf:li"),
     /** dc:date(作成日時) */
@@ -20,6 +24,8 @@ public enum XmlParserEnum {
     DC_LANGUAGE("dc:language"),
     /** item */
     ITEM("item"),
+    /** items */
+    ITEMS("items"),
     /** title */
     TITLE("title"),
     /** link */
@@ -27,14 +33,14 @@ public enum XmlParserEnum {
     /** description */
     DESCRIPTION("description");
 
-	/** タグ名 */
+    /** タグ名 */
     private String name;
 
     /** Constructor */
     XmlParserEnum(String name) {
         this.name = name;
     }
-	
+
     public String getName() {
         return this.name;
     }

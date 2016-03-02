@@ -7,10 +7,10 @@ import java.util.ArrayList;
 public class XmlParserBean {
 
     /** channelタグ以下格納用 */
-    HashMap<String, String> channels;
+    private HashMap<String, String> channels;
 
     /** itemタグ以下格納用 */
-    List<HashMap<String, String>> articles;
+    private List<HashMap<String, String>> articles;
 
     public HashMap<String, String> getChannels() {
         return channels;
