@@ -6,7 +6,6 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListActivity;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,14 +13,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ListView;
 
-import com.myproject.vinsky.app.UI.Item;
 import com.myproject.vinsky.app.UI.RssListAdapter;
+import com.myproject.vinsky.app.UI.RssParserTask;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ListActivity
+public class RssReaderActivity extends ListActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -60,10 +58,16 @@ public class MainActivity extends ListActivity
         // アダプタをリストビューにセットする
         setListAdapter(mAdapter);
 
+        /*
         // サンプル用に空のItemオブジェクトをセットする
         for (int i = 0; i < 10; i++) {
             mAdapter.add(new Item());
         }
+        */
+
+        // タスクを起動する
+        RssParserTask task = new RssParserTask(this, mAdapter);
+        task.execute(RSS_FEED_URL);
     }
 
     @Override
@@ -160,7 +164,7 @@ public class MainActivity extends ListActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
+            ((RssReaderActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
