@@ -18,7 +18,7 @@ public class XmlParser {
     }
 
     /** 解析状態を保持するための変数 */
-    private static int eventType;
+    private int eventType;
 
     /**
      * RSS1.0に準拠するXMLファイルを解析する.
