@@ -1,5 +1,9 @@
 package com.myproject.vinsky.app;
 
+/*
+* エントリーポイント
+* */
+
 import android.app.Activity;
 
 import android.app.ActionBar;
@@ -7,6 +11,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +38,7 @@ public class RssReaderActivity extends ListActivity
     private CharSequence lastTitle;
 
     // RSS用メンバ変数
+    public static final String RSS_FEED_URL = "http://itpro.nikkeibp.co.jp/rss/ITpro.rdf";
     private ArrayList mItems;
     private RssListAdapter mAdapter;
 
@@ -77,9 +83,11 @@ public class RssReaderActivity extends ListActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
+        Log.d("RssReaderActivity", "Click?");
     }
 
     public void onSectionAttached(int number) {
+        Log.d("onSectionAttached", "Click?");
         switch (number) {
             case 1:
                 lastTitle = getString(R.string.title_section1);
@@ -119,6 +127,8 @@ public class RssReaderActivity extends ListActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        Log.d("onOptionsItemSelected", "Click?");
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
