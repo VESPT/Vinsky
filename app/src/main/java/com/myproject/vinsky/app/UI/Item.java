@@ -9,7 +9,7 @@ public class Item {
     // 記事のタイトル
     private CharSequence mTitle;
     // 記事の要約
-    private CharSequence getmDescription;
+    private CharSequence mDescription;
     // 記事の本文
     private CharSequence mDescription;
 
