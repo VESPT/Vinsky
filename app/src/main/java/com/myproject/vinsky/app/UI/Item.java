@@ -16,6 +16,7 @@ public class Item {
     public Item() {
         mTitle = "";
         mDescription = "";
+        mDescription = "";
     }
 
     // アクセッサ
@@ -28,11 +29,11 @@ public class Item {
     }
 
     public CharSequence getmDescription() {
-        return this.mDescription;
+        return mDescription;
     }
 
     public void setmDescription(CharSequence mDescription) {
-        this.mDescription = mDescription;
+        mDescription = mDescription;
     }
 
     public CharSequence getTitle() {
