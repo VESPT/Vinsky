@@ -9,13 +9,13 @@ public class Item {
     // 記事のタイトル
     private CharSequence mTitle;
     // 記事の要約
-    private CharSequence mDescription;
+    private CharSequence mSummary;
     // 記事の本文
     private CharSequence mDescription;
 
     public Item() {
         mTitle = "";
-        mDescription = "";
+        mSummary = "";
         mDescription = "";
     }
 
@@ -28,12 +28,12 @@ public class Item {
         mDescription = description;
     }
 
-    public CharSequence getmDescription() {
-        return mDescription;
+    public CharSequence getSummary() {
+        return mSummary;
     }
 
-    public void setmDescription(CharSequence mDescription) {
-        mDescription = mDescription;
+    public void setSummary(CharSequence summary) {
+        mSummary = summary;
     }
 
     public CharSequence getTitle() {
