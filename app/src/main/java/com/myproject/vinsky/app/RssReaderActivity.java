@@ -18,13 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.widget.ListView;
 
 import com.myproject.vinsky.app.UI.RssListAdapter;
 import com.myproject.vinsky.app.UI.RssParserTask;
 
 import java.util.ArrayList;
 
-public class RssReaderActivity extends ListActivity
+public class RssReaderActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     /**
@@ -41,6 +42,11 @@ public class RssReaderActivity extends ListActivity
     public static final String RSS_FEED_URL = "http://itpro.nikkeibp.co.jp/rss/ITpro.rdf";
     private ArrayList mItems;
     private RssListAdapter mAdapter;
+    protected ListView rssLV;
+
+    public ListView getRssLV(){
+        return rssLV;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +68,8 @@ public class RssReaderActivity extends ListActivity
         mAdapter = new RssListAdapter(this, mItems);
 
         // アダプタをリストビューにセットする
-        setListAdapter(mAdapter);
+        rssLV = (ListView)findViewById(R.id.contents_listview);
+        rssLV.setAdapter(mAdapter);
 
         /*
         // サンプル用に空のItemオブジェクトをセットする
@@ -75,6 +82,13 @@ public class RssReaderActivity extends ListActivity
         RssParserTask task = new RssParserTask(this, mAdapter);
         task.execute(RSS_FEED_URL);
     }
+
+    // クリック処理(NavigationDrawerじゃない方)
+    /*
+    @Override
+    protected void onListItemClick( ListView l, View v, int position, long id){
+        Log.d("RssReaderActivity", "onListItemClick");
+    }*/
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {

@@ -74,7 +74,7 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
     @Override
     protected void onPostExecute(RssListAdapter result) {
         mProgressDialog.dismiss();
-        mActivity.setListAdapter(result);
+        mActivity.getRssLV().setAdapter(result);
     }
 
     // XMLをパースする(デバッグ用パーサ)
