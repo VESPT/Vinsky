@@ -1,4 +1,4 @@
-package com.myproject.vinsky.backend;
+package com.myproject.vinsky.app.backend;
 
 import java.util.HashMap;
 import java.util.List;
