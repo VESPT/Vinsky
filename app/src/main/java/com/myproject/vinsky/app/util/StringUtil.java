@@ -1,4 +1,4 @@
-package com.myproject.vinsky.util;
+package com.myproject.vinsky.app.util;
 
 /**
  * 文字列操作用オブジェクト.
