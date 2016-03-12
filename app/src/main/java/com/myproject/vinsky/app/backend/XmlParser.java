@@ -1,5 +1,6 @@
-package com.myproject.vinsky.backend;
+package com.myproject.vinsky.app.backend;
 
+import android.util.Log;
 import android.util.Xml;
 import org.apache.commons.lang3.StringUtils;
 import org.xmlpull.v1.XmlPullParser;
@@ -13,20 +14,47 @@ import java.util.List;
 
 public class XmlParser {
 
-    /** Constructor */
-    XmlParser() {
-    }
-
     /** 解析状態を保持するための変数 */
     private int eventType;
+
+    /** コンストラクタ */
+    public XmlParser() {
+    }
+
+    /**
+     * XML文字列を受け取り、そのバージョンで処理を振り分ける
+     * @param xml
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    public XmlParserBean parseXml(String xml) throws XmlPullParserException, IOException {
+
+        // ブログ情報全体の格納先となるビーン.
+        XmlParserBean xmlParserBean = null;
+        XmlPullParser xmlPullParser = Xml.newPullParser();
+        xmlPullParser.setInput(new StringReader(xml));
+
+        // xmlの最初のタグ(=バージョン)を取得
+        eventType = xmlPullParser.next();
+        if (eventType == XmlPullParser.START_TAG &&
+                xmlPullParser.getName().equals(XmlParserEnum.XML.getName())) {
+
+            if (xmlPullParser.getAttributeValue(0).equals(XmlParserEnum.VERSION_1.getName())) {
+                // xml version 1.0
+                xmlParserBean = parseRss1(xmlPullParser);
+            }
+        }
+
+        return xmlParserBean;
+    }
 
     /**
      * RSS1.0に準拠するXMLファイルを解析する.
      * 解析結果をBean変数内に整理してBeanごと返す.
      * channel情報はHashMap、記事情報は1記事1HashMapのリストとしてBeanに格納される。
-     * @param xml RSS1.0準拠のXMLファイル
      */
-    public XmlParserBean parseRss1(String xml) throws XmlPullParserException, IOException {
+    private XmlParserBean parseRss1(XmlPullParser xmlPullParser) throws XmlPullParserException, IOException {
 
         // ブログ情報全体の格納先となるビーン.
         XmlParserBean xmlParserBean = new XmlParserBean();
@@ -35,28 +63,23 @@ public class XmlParser {
         // 記事情報(itemタグ内情報)を保持するリスト.
         List<HashMap<String, String>> articles = new ArrayList<HashMap<String, String>>();
 
-        XmlPullParser xmlPullParser = Xml.newPullParser();
-        xmlPullParser.setInput(new StringReader(xml));
-
         while ((eventType = xmlPullParser.next()) != XmlPullParser.END_DOCUMENT) {
 
             if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.RDF_RDF.getName())) {
-                // xml1.0は必ずrdf:RDFタグで開始される
                 continue;
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.CHANNEL.getName())) {
-                // channelタグを処理
+                // channel
                 channel = parseChannelTag(xmlPullParser);
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.ITEM.getName())) {
-                // itemタグを処理
+                // item
                 articles.add(parseItemTag(xmlPullParser));
 
             } else {
-                // その他タグは無視
                 continue;
             }
         }
@@ -80,9 +103,10 @@ public class XmlParser {
         HashMap<String, String> channel = new HashMap<String, String>();
 
         // (1)ブログへのURLを取得.
-        // TODO 他に属性がある場合、仕様では順序まで保障されていない可能性あり
-        // TODO aboutは必須属性なので、必ず付与される想定
-        channel.put(XmlParserEnum.RDF_ABOUT.getName(), xmlPullParser.getAttributeValue(0));
+        // TODO rssの仕様では属性の付与は必須だが、存在しない場合の対策をいれること.
+        if (xmlPullParser.getAttributeValue(0) != null) {
+            channel.put(XmlParserEnum.RDF_ABOUT.getName(), xmlPullParser.getAttributeValue(0));
+        }
 
         // (2)ブログの基本情報を取得.
         while ((eventType = xmlPullParser.next()) != XmlPullParser.END_TAG &&
@@ -91,25 +115,27 @@ public class XmlParser {
             if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.TITLE.getName())) {
                 // title
+                Log.d(XmlParserEnum.TITLE.getName(), xmlPullParser.getText());
                 channel.put(XmlParserEnum.TITLE.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.LINK.getName())) {
                 // link
+                Log.d(XmlParserEnum.LINK.getName(), xmlPullParser.getText());
                 channel.put(XmlParserEnum.LINK.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.DESCRIPTION.getName())) {
                 // description
+                Log.d(XmlParserEnum.DESCRIPTION.getName(), xmlPullParser.getText());
                 channel.put(XmlParserEnum.DESCRIPTION.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.ITEMS.getName())) {
-                // item
-                //TODO itemはメソッドを使いまわせるよう記述する?
+                // items
                 //TODO channelの中にはchannel用のitemsタグがあるので、それに合わせて処理を作る
 
             } else {
@@ -120,6 +146,9 @@ public class XmlParser {
         }
         return channel;
     }
+	
+	private void parseChannelItemsTag() {
+	}
 
     /**
      * ITEMタグ解析用メソッド.
@@ -134,7 +163,7 @@ public class XmlParser {
         HashMap<String, String> article = new HashMap<String, String>();
 
         // (1)記事へのURLを取得.
-        // TODO RSSの仕様では属性の順序まで保障されていない可能性があるので要確認
+        // TODO 属性が存在していないケースがある。その場合の対処はどうするか
         article.put(XmlParserEnum.RDF_ABOUT.getName(),
                 StringUtils.defaultString(xmlPullParser.getAttributeValue(0)));
 
@@ -145,21 +174,31 @@ public class XmlParser {
             if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.TITLE.getName())) {
                 // title
+                Log.d(XmlParserEnum.TITLE.getName(), xmlPullParser.getText());
                 article.put(XmlParserEnum.TITLE.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.LINK.getName())) {
                 // link
+                Log.d(XmlParserEnum.LINK.getName(), xmlPullParser.getText());
                 article.put(XmlParserEnum.LINK.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
             } else if (eventType == XmlPullParser.START_TAG &&
                     xmlPullParser.getName().equals(XmlParserEnum.DESCRIPTION.getName())) {
                 // description
+                Log.d(XmlParserEnum.DESCRIPTION.getName(), xmlPullParser.getText());
                 article.put(XmlParserEnum.DESCRIPTION.getName(),
                         StringUtils.defaultString(xmlPullParser.getText()));
 
+            } else if (eventType == XmlPullParser.START_TAG &&
+                	xmlPullParser.getName().equals(XmlParserEnum.DC_DATE.getName())) {
+                // dc:date
+                Log.d(XmlParserEnum.DC_DATE.getName(), xmlPullParser.getText());
+                article.put(XmlParserEnum.DC_DATE.getName(),
+                        StringUtils.defaultString(xmlPullParser.getText()));
+ 
             } else {
                 // その他タグは無視
                 continue;
@@ -172,13 +211,33 @@ public class XmlParser {
      * RSS2.0に準拠するXMLファイルを解析する
      * @param xml xml文字列
      */
-    public void parseRss2(String xml) {
+    private void parseRss2(String xml) {
     }
 
     /**
      * ATOMに準拠するXMLファイルを解析する
      * @param xml xml文字列
      */
-    public void parseAtom(String xml) {
+    private void parseAtom(String xml) {
+    }
+
+    /**
+     * TODO 後で削除すること.
+     * JUNIT動作確認用メソッド
+     * @param id
+     * @return
+     */
+    public String testMeth(int id) {
+        String res = null;
+
+        if (id == 1) {
+            res = "test1";
+        } else if (id == 2) {
+            res = "test2";
+        } else {
+            res = "test3";
+        }
+
+        return res;
     }
 }

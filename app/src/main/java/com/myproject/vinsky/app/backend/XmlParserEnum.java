@@ -1,9 +1,11 @@
-package com.myproject.vinsky.backend;
+package com.myproject.vinsky.app.backend;
 
 public enum XmlParserEnum {
 
     /** ?xml */
     XML("?xml"),
+    /** xml version 1.0 */
+    VERSION_1("1.0"),
     /** drf:RDF */
     RDF_RDF("rdf:RDF"),
     /** version */
