@@ -5,7 +5,6 @@ package com.myproject.vinsky.app;
 * */
 
 import android.app.Activity;
-
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -19,11 +18,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ListView;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 
+import com.myproject.vinsky.app.UI.Item;
 import com.myproject.vinsky.app.UI.RssListAdapter;
 import com.myproject.vinsky.app.UI.RssParserTask;
+import com.myproject.vinsky.app.backend.VinDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RssReaderActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -53,19 +57,16 @@ public class RssReaderActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        /*
-        // Itemオブジェクトを保持するためのリストを生成し、アダプタに追加する
-        mItems = new ArrayList();
-        mAdapter = new RssListAdapter(this, mItems);
+        // TODO ダミーデータ周りは処理実装完了後に削除すること.
+        // DB接続 & 最新ブログ記事取得処理
+        // 1. オブジェクトの作成と同時に(なければ)DBファイルが作られる.
+        VinDatabase helper = new VinDatabase(this);
+        SQLiteDatabase vinDb = helper.getReadableDatabase();
+        // 2. 一覧表示用のデータを取得.
+        // TODO 一覧表示処理を追加する
+        List<Item> articles = helper.getAllArticles(vinDb);
 
-        // アダプタをリストビューにセットする
-        rssLV = (ListView)findViewById(R.id.contents_listview);
-        rssLV.setAdapter(mAdapter);
 
-        // タスクを起動する
-        RssParserTask task = new RssParserTask(this, mAdapter);
-        task.execute(RSS_FEED_URL);
-        */
     }
 
     // クリック処理(NavigationDrawerじゃない方)

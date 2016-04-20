@@ -30,7 +30,7 @@ public class VinDatabase extends SQLiteOpenHelper {
         // CREATE
         db.execSQL(this.sqlCreate());
         // TODO 開発用 ダミーデータ生成 データ取得処理作成完了後に削除すること
-        String makeDummySql = this.makeDummyData();
+        String makeDummySql = makeDummyData();
         db.execSQL(makeDummySql);
     }
 
