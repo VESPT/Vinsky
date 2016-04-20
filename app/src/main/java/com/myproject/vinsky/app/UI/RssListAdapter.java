@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.myproject.vinsky.app.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,8 @@ public class RssListAdapter extends ArrayAdapter<Item> {
     private TextView mTitle;
     private TextView mDescr;
 
-    public RssListAdapter(Context context, List<Item> objects) {
+    //public RssListAdapter(Context context, List<Item> objects) {
+    public RssListAdapter(Context context, ArrayList<Item> objects) {
         super(context, 0, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

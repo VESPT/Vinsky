@@ -38,16 +38,6 @@ public class RssReaderActivity extends Activity
      */
     private CharSequence lastTitle;
 
-    // RSS用メンバ変数
-    public static final String RSS_FEED_URL = "http://itpro.nikkeibp.co.jp/rss/ITpro.rdf";
-    private ArrayList mItems;
-    private RssListAdapter mAdapter;
-    protected ListView rssLV;
-
-    public ListView getRssLV(){
-        return rssLV;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +53,7 @@ public class RssReaderActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        /*
         // Itemオブジェクトを保持するためのリストを生成し、アダプタに追加する
         mItems = new ArrayList();
         mAdapter = new RssListAdapter(this, mItems);
@@ -71,16 +62,10 @@ public class RssReaderActivity extends Activity
         rssLV = (ListView)findViewById(R.id.contents_listview);
         rssLV.setAdapter(mAdapter);
 
-        /*
-        // サンプル用に空のItemオブジェクトをセットする
-        for (int i = 0; i < 10; i++) {
-            mAdapter.add(new Item());
-        }
-        */
-
         // タスクを起動する
         RssParserTask task = new RssParserTask(this, mAdapter);
         task.execute(RSS_FEED_URL);
+        */
     }
 
     // クリック処理(NavigationDrawerじゃない方)
@@ -90,12 +75,14 @@ public class RssReaderActivity extends Activity
         Log.d("RssReaderActivity", "onListItemClick");
     }*/
 
+    //フラグメントの選択
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
+        // Fragmentをここで更新
         fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
+                .replace(R.id.container, MainFragmentClass.newInstance(position + 1))
                 .commit();
         Log.d("RssReaderActivity", "Click?");
     }
