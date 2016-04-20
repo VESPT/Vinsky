@@ -13,6 +13,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     <!-- mainアクティビティ用(GetRss) -->
-
+    <ListView
+        android:id="@+id/contents_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <!-- リストが空のときに表示 -->
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

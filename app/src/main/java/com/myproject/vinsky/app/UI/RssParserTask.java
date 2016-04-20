@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Xml;
 
+import com.myproject.vinsky.app.MainFragmentClass;
 import com.myproject.vinsky.app.RssReaderActivity;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -20,11 +21,13 @@ import java.net.URL;
 public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
     private RssReaderActivity mActivity;
     private RssListAdapter mAdapter;
+    private MainFragmentClass mFragment;
     private ProgressDialog mProgressDialog;
 
     // コンストラクタ
-    public RssParserTask(RssReaderActivity activity, RssListAdapter adapter) {
+    public RssParserTask(RssReaderActivity activity,MainFragmentClass main_fragment, RssListAdapter adapter) {
         mActivity = activity;
+        mFragment = main_fragment;
         mAdapter = adapter;
     }
 
@@ -40,41 +43,44 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
     // バックグラウンドにおける処理を担う。タスク実行時に渡された値を引数とする
     @Override
     protected RssListAdapter doInBackground(String... params) {
-        RssListAdapter result = null;
-
-        // デバッグ用
-        Item currentItem1 = new Item();
-        Item currentItem2 = new Item();
+        RssListAdapter itemsInfo = null;
 
         try {
             // HTTP経由でアクセスし、InputStreamを取得する
             URL url = new URL(params[0]);
             InputStream is = url.openConnection().getInputStream();
             // パーサはここで圭佑バージョンを使う予定
-            //result = parseXml(is);
-
-            // デバッグ用 アダプターにタイトルと内容を入れてる
-            // ここでDBからテキスト情報取得して入れればよいはず・・・
-            currentItem1.setTitle("TitleABABABABA11111");
-            currentItem1.setDescription("11111ふぉおおおおおおおおおおおおおおおおお");
-            mAdapter.add(currentItem1);
-            currentItem2.setTitle("2222TitleABABABABA");
-            currentItem2.setDescription("2222ふぉおおおおおおおおおおおおおおおおお");
-            mAdapter.add(currentItem2);
-            result=mAdapter;
+            itemsInfo = parseXml(is);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         // ここで返した値は、onPostExecuteメソッドの引数として渡される
-        return result;
+        return itemsInfo;
     }
 
     // メインスレッド上で実行される
     @Override
-    protected void onPostExecute(RssListAdapter result) {
+    protected void onPostExecute(RssListAdapter itemsInfo) {
         mProgressDialog.dismiss();
-        mActivity.getRssLV().setAdapter(result);
+
+        /*
+        // デバッグ用 アダプターにタイトルと内容を入れてる
+        // デバッグ用変数
+        Item currentItem1 = new Item();
+        Item currentItem2 = new Item();
+        // ここでDBからテキスト情報取得して入れればよいはず・・・
+        currentItem1.setTitle("TitleABABABABA11111");
+        currentItem1.setDescription("11111ふぉおおおおおおおおおおおおおおおおお");
+        mAdapter.add(currentItem1);
+        currentItem2.setTitle("2222TitleABABABABA");
+        currentItem2.setDescription("2222ふぉおおおおおおおおおおおおおおおおお");
+        mAdapter.add(currentItem2);
+        itemsInfo=mAdapter;
+        */
+
+
+        mFragment.getRssLV().setAdapter(itemsInfo);
     }
 
     // XMLをパースする(デバッグ用パーサ)
