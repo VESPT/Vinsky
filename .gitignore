@@ -1,11 +1,12 @@
+/app/build.gradle
 *.gradle
+settings.gradle
+*.txt
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+/.idea/*
 .DS_Store
 /build
 /captures
-/.idea/misc.xml
 gradle.xml
 app.iml
 git_diff_from.sh

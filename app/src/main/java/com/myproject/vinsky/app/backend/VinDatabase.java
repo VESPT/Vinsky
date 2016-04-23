@@ -113,16 +113,16 @@ public class VinDatabase extends SQLiteOpenHelper {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("INSERT INTO t01_article_table VALUES (0,\"title01\",\"test01\",\"contents test01\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (1,\"title02\",\"test02\",\"contents test02\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (2,\"title03\",\"test03\",\"contents test03\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (3,\"title04\",\"test04\",\"contents test04\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (4,\"title05\",\"test05\",\"contents test05\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (5,\"title06\",\"test06\",\"contents test06\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (6,\"title07\",\"test07\",\"contents test07\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (7,\"title08\",\"test08\",\"contents test08\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (8,\"title09\",\"test09\",\"contents test09\",NULL);");
-        sb.append("INSERT INTO t01_article_table VALUES (9,\"title10\",\"test10\",\"contents test10\",NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (0,\"title01\",\"test01\",\"contents test01\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (1,\"title02\",\"test02\",\"contents test02\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (2,\"title03\",\"test03\",\"contents test03\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (3,\"title04\",\"test04\",\"contents test04\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (4,\"title05\",\"test05\",\"contents test05\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (5,\"title06\",\"test06\",\"contents test06\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (6,\"title07\",\"test07\",\"contents test07\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (7,\"title08\",\"test08\",\"contents test08\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (8,\"title09\",\"test09\",\"contents test09\",NULL,NULL);");
+        sb.append("INSERT INTO t01_article_table VALUES (9,\"title10\",\"test10\",\"contents test10\",NULL,NULL);");
 
         return sb.toString();
     }
