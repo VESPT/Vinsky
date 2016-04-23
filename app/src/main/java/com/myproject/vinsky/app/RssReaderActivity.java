@@ -57,6 +57,7 @@ public class RssReaderActivity extends Activity
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        /*
         // TODO ダミーデータ周りは処理実装完了後に削除すること.
         // DB接続 & 最新ブログ記事取得処理
         // 1. オブジェクトの作成と同時に(なければ)DBファイルが作られる.
@@ -65,7 +66,7 @@ public class RssReaderActivity extends Activity
         // 2. 一覧表示用のデータを取得.
         // TODO 一覧表示処理を追加する
         List<Item> articles = helper.getAllArticles(vinDb);
-
+        */
 
     }
 

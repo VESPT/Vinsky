@@ -2,11 +2,16 @@ package com.myproject.vinsky.app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.myproject.vinsky.app.UI.RssListAdapter;
 import com.myproject.vinsky.app.UI.RssParserTask;
@@ -79,14 +84,40 @@ public class MainFragmentClass extends Fragment {
 
         // タスクを起動する
         RssParserTask task = new RssParserTask((RssReaderActivity)getActivity(), this, mAdapter);
+        String targetURL = "";
         switch(sectionNum){
             case 1:
-                task.execute("http://blog.livedoor.jp/dqnplus/index.rdf");
+                targetURL = "http://blog.livedoor.jp/dqnplus/index.rdf";
                 break;
             default:
-                task.execute(RSS_FEED_URL);
+                targetURL = RSS_FEED_URL;
                 break;
         }
+        task.execute(targetURL);
+
+        //リスト項目が選択された時のイベントを追加
+        rssLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String msg = position + "番目のアイテムがクリックされました";
+                Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+                Uri uri=null;
+                switch(position){
+                    case 0:
+                        uri = Uri.parse("http://blog.livedoor.jp/dqnplus/");
+                        break;
+                    case 1:
+                        uri = Uri.parse("http://www115.sakura.ne.jp/~byunbyun/index.html");
+                    default:
+                        Log.d("ListViewError","予期せぬ番号をクリック");
+                        break;
+                }
+                //ブラウザを呼び出す暗黙的インテント
+                if(uri != null){
+                    Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+                    startActivity(intent);
+                }
+            }
+        });
 
         return rootView;
     }

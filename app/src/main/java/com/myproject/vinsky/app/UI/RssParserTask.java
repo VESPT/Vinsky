@@ -50,7 +50,7 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
             URL url = new URL(params[0]);
             InputStream is = url.openConnection().getInputStream();
             // パーサはここで圭佑バージョンを使う予定
-            itemsInfo = parseXml(is);
+            itemsInfo = parseXml(is); // 拾ったパーサ
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +79,6 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
         itemsInfo=mAdapter;
         */
 
-
         mFragment.getRssLV().setAdapter(itemsInfo);
     }
 
@@ -102,6 +101,8 @@ public class RssParserTask extends AsyncTask<String, Integer, RssListAdapter> {
                                 currentItem.setTitle(parser.nextText());
                             } else if (tag.equals("description")) {
                                 currentItem.setDescription(parser.nextText());
+                            } else if (tag.equals("link")){
+                                currentItem.setLink(parser.nextText());
                             }
                         }
                         break;

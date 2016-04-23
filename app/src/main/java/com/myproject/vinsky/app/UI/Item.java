@@ -12,11 +12,14 @@ public class Item {
     private CharSequence mSummary;
     // 記事の本文
     private CharSequence mDescription;
+    // 記事へのリンク
+    private CharSequence mLink;
 
     public Item() {
         mTitle = "";
         mSummary = "";
         mDescription = "";
+        mLink = "";
     }
 
     // アクセッサ
@@ -43,4 +46,8 @@ public class Item {
     public void setTitle(CharSequence title) {
         mTitle = title;
     }
+
+    public CharSequence getLink(){ return mLink;}
+
+    public void setLink(CharSequence link){mLink = link; }
 }
