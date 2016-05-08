@@ -38,6 +38,7 @@ public class RssListAdapter extends ArrayAdapter<Item> {
         Item item = this.getItem(position);
         if (item != null) {
             // Itemから必要なデータ(記事のタイトルと本文)を取り出し、それぞれTextViewにセットする
+            // TODO ここでビューを作成. 表示するために必要な情報を詰める.
             String title = item.getTitle().toString();
             mTitle = (TextView) view.findViewById(R.id.item_title);
             mTitle.setText(title);
